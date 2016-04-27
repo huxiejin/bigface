@@ -1,7 +1,14 @@
+/**
+ * @author huxiejin
+ * @description 大花脸比较功能，完成某段文本多个版本差异的比较，并将差异结果在一个界面上显示出来。
+ * @keywords compare, merge
+ * /
 (function() {
 
 	function BigFace(contentFieldName) {
-		//比较时，json对象的哪个属性表示当前需要比较的内容，因为可以比较标题，也可以比较正文。
+		//因为execute接口传入的为json数据，其中json里面包含字符串内容，创建者、操作时间等字段；
+		//故需要明确哪个字段为当前需要比较的字段
+		//另外，对文章进行版本比较时，既需要比较文档的标题，也需要比较正文内容。
 		this.fieldName = contentFieldName || "content";
 
 		//在找到一个多长的匹配串时，则认为两个版本的的位置相匹配
@@ -23,7 +30,13 @@
 
 		/**
 		 * 对多个版本进行比较，返回比较合并后的结果
-		 * @param  {[type]} jsonVersions [description]
+		 * @param  {Array} jsonVersions json数组，其中的每个元素结构为：{
+					"CRUSER":"huxiejin", //创建者
+					"CRTIME":"2016-1-14 15:16:50", //创建时间
+					"TITLE" : "THIS IS TITLE",
+					"CONTENT":"hello world", //当前版本的数据
+					"VERSIONNUM":1 //当前的版本号，需要为一个数字
+				}
 		 * @return {[type]}              [description]
 		 */
 		execute: function(jsonVersions) {
