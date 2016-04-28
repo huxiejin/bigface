@@ -2,7 +2,7 @@
  * @author huxiejin
  * @description 大花脸比较功能，完成某段文本多个版本差异的比较，并将差异结果在一个界面上显示出来。
  * @keywords compare, merge
- * /
+ */
 (function() {
 
 	function BigFace(contentFieldName) {
@@ -280,6 +280,7 @@
 
 		/**
 		 * 左侧leftContent从指定的位置leftPos，右侧rightContent从指定的位置rightPos开始找到一个匹配串
+		 * 此方法优先从左侧开始取串从右侧查找，没有找到的情况下，再反向查找。
 		 * @param  {[type]} leftContent  [description]
 		 * @param  {[type]} leftPos      [description]
 		 * @param  {[type]} rightContent [description]
@@ -306,6 +307,15 @@
 			return null;
 		},
 
+		/**
+		 * 从左侧leftContent从指定的位置leftPos，在右侧rightContent从指定的位置rightPos开始找到一个匹配串
+		 * @param  {[type]} leftContent  [description]
+		 * @param  {[type]} leftPos      [description]
+		 * @param  {[type]} rightContent [description]
+		 * @param  {[type]} rightPos     [description]
+		 * @param  {[type]} stringIndex  [description]
+		 * @return {[type]}              [description]
+		 */
 		findAvailableRange: function(leftContent, leftPos, rightContent, rightPos, stringIndex) {
 			var tmpChar = leftContent[leftPos];
 			var rightIndexItem = stringIndex.charValueIndex[tmpChar];
@@ -450,6 +460,7 @@
 				var cep1 = compareRange.ep1;
 				if (mep2 > cep1) {
 					var range1 = extend({}, compareRange, {
+						"CRUSER": mergeRange.CRUSER,
 						"VERSIONNUM": mergeRange.VERSIONNUM,
 						"lv": compareRange.VERSIONNUM //最近的版本lastversion
 					});
@@ -460,14 +471,14 @@
 					var range2 = extend({}, mergeRange, {
 						"sp1": mergeRange.ep1 - fragment.length,
 						"sp2": mergeRange.ep2 - fragment.length,
-						"fragment": fragment,
-						"lv": mergeRange.VERSIONNUM //最近的版本lastversion
+						"fragment": fragment
 					});
 					mergeResult.splice(mergeIndex + 1, 0, range2);
 				} else {
 					var length = mergeRange.fragment.length;
 
 					var range1 = extend({}, compareRange, {
+						"CRUSER": mergeRange.CRUSER,
 						"VERSIONNUM": mergeRange.VERSIONNUM,
 						"ep1": compareRange.sp1 + length,
 						"ep2": compareRange.sp2 + length,
@@ -561,6 +572,7 @@
 					var range1 = extend({}, compareRange, {
 						"type": '+',
 						"ep1": compareRange.sp1,
+						"CRUSER": mergeRange.CRUSER,
 						"VERSIONNUM": mergeRange.VERSIONNUM,
 						"lv": compareRange.VERSIONNUM //最近的版本lastversion
 					});
@@ -578,6 +590,7 @@
 
 					var range1 = extend({}, compareRange, {
 						"type": "+",
+						"CRUSER": mergeRange.CRUSER,
 						"VERSIONNUM": mergeRange.VERSIONNUM,
 						"ep1": compareRange.sp1,
 						"ep2": compareRange.sp2 + length,
@@ -629,6 +642,7 @@
 
 					var fragment = mergeRange.fragment.substr(length);
 					var range2 = extend({}, mergeRange, {
+						"CRUSER": mergeRange.CRUSER,
 						"VERSIONNUM": mergeRange.VERSIONNUM,
 						"sp1": mergeRange.ep1,
 						"sp2": mergeRange.ep2 - fragment.length,
