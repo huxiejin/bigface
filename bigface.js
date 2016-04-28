@@ -17,10 +17,6 @@
 		//相比比较内容的百分比，真实的最小匹配长度为：min(content长度*this.minMatchPercent,this.minMatchLength)
 		this.minMatchPercent = 0.2;
 
-		//当前比较的两个版本的内容
-		this.leftVersion = null;
-		this.rightVersion = null;
-
 		//当前比较的两个版本的索引信息
 		this.leftIndex = null;
 		this.rightIndex = null;
@@ -71,9 +67,6 @@
 		compare: function(leftVersion, rightVersion) {
 			var ranges = [];
 
-			//记录当前比较的字符串
-			this.leftVersion = leftVersion;
-			this.rightVersion = rightVersion;
 
 			//对左侧字符串进行索引
 			if (this.rightIndex) { //直接使用前一次的右侧索引，避免重复计算
@@ -123,9 +116,9 @@
 						ep1: leftPos,
 						sp2: modifyRightPos,
 						ep2: modifyRightPos,
-						"CRUSER": this.rightVersion.CRUSER,
-						"CRTIME": this.rightVersion.CRTIME,
-						"VERSIONNUM": this.rightVersion.VERSIONNUM,
+						"CRUSER": rightVersion.CRUSER,
+						"CRTIME": rightVersion.CRTIME,
+						"VERSIONNUM": rightVersion.VERSIONNUM,
 						fragment: leftContent.substring(modifyLeftPos, leftPos)
 					});
 					modifyLeftPos = -1;
@@ -138,9 +131,9 @@
 						ep1: range.sp1,
 						sp2: rightPos,
 						ep2: rightPos,
-						"CRUSER": this.rightVersion.CRUSER,
-						"CRTIME": this.rightVersion.CRTIME,
-						"VERSIONNUM": this.rightVersion.VERSIONNUM,
+						"CRUSER": rightVersion.CRUSER,
+						"CRTIME": rightVersion.CRTIME,
+						"VERSIONNUM": rightVersion.VERSIONNUM,
 						fragment: leftContent.substring(leftPos, range.sp1)
 					});
 				}
@@ -152,9 +145,9 @@
 						ep1: leftPos,
 						sp2: modifyRightPos,
 						ep2: rightPos,
-						"CRUSER": this.rightVersion.CRUSER,
-						"CRTIME": this.rightVersion.CRTIME,
-						"VERSIONNUM": this.rightVersion.VERSIONNUM,
+						"CRUSER": rightVersion.CRUSER,
+						"CRTIME": rightVersion.CRTIME,
+						"VERSIONNUM": rightVersion.VERSIONNUM,
 						fragment: rightContent.substring(modifyRightPos, rightPos)
 					});
 					modifyRightPos = -1;
@@ -167,18 +160,18 @@
 						ep1: leftPos,
 						sp2: rightPos,
 						ep2: range.sp2,
-						"CRUSER": this.rightVersion.CRUSER,
-						"CRTIME": this.rightVersion.CRTIME,
-						"VERSIONNUM": this.rightVersion.VERSIONNUM,
+						"CRUSER": rightVersion.CRUSER,
+						"CRTIME": rightVersion.CRTIME,
+						"VERSIONNUM": rightVersion.VERSIONNUM,
 						fragment: rightContent.substring(rightPos, range.sp2)
 					});
 				}
 
 				if (leftPos == range.sp1 && rightPos == range.sp2) { //相等
 					range.type = '=';
-					range.CRUSER = this.rightVersion.CRUSER;
-					range.CRTIME = this.rightVersion.CRTIME;
-					range.VERSIONNUM = this.rightVersion.VERSIONNUM;
+					range.CRUSER = rightVersion.CRUSER;
+					range.CRTIME = rightVersion.CRTIME;
+					range.VERSIONNUM = rightVersion.VERSIONNUM;
 					range.fragment = leftContent.substring(range.sp1, range.ep1);
 					ranges.push(range);
 					leftPos = range.ep1;
@@ -188,9 +181,9 @@
 
 				if (leftPos == range.sp1) { //普通增加的相等处理
 					range.type = '=';
-					range.CRUSER = this.rightVersion.CRUSER;
-					range.CRTIME = this.rightVersion.CRTIME;
-					range.VERSIONNUM = this.rightVersion.VERSIONNUM;
+					range.CRUSER = rightVersion.CRUSER;
+					range.CRTIME = rightVersion.CRTIME;
+					range.VERSIONNUM = rightVersion.VERSIONNUM;
 					range.fragment = leftContent.substring(leftPos, range.ep1);
 					ranges.push(range);
 					leftPos = range.ep1;
@@ -200,9 +193,9 @@
 
 				if (rightPos == range.sp2) { //普通删除的相等处理
 					range.type = '=';
-					range.CRUSER = this.rightVersion.CRUSER;
-					range.CRTIME = this.rightVersion.CRTIME;
-					range.VERSIONNUM = this.rightVersion.VERSIONNUM;
+					range.CRUSER = rightVersion.CRUSER;
+					range.CRTIME = rightVersion.CRTIME;
+					range.VERSIONNUM = rightVersion.VERSIONNUM;
 					range.fragment = rightContent.substring(rightPos, range.ep2);
 					ranges.push(range);
 					leftPos = range.ep1;
@@ -220,9 +213,9 @@
 					ep1: leftPos,
 					sp2: modifyRightPos,
 					ep2: modifyRightPos,
-					"CRUSER": this.rightVersion.CRUSER,
-					"CRTIME": this.rightVersion.CRTIME,
-					"VERSIONNUM": this.rightVersion.VERSIONNUM,
+					"CRUSER": rightVersion.CRUSER,
+					"CRTIME": rightVersion.CRTIME,
+					"VERSIONNUM": rightVersion.VERSIONNUM,
 					fragment: leftContent.substring(modifyLeftPos, leftPos)
 				});
 				modifyLeftPos = -1;
@@ -235,9 +228,9 @@
 					ep1: len1,
 					sp2: len2,
 					ep2: len2,
-					"CRUSER": this.rightVersion.CRUSER,
-					"CRTIME": this.rightVersion.CRTIME,
-					"VERSIONNUM": this.rightVersion.VERSIONNUM,
+					"CRUSER": rightVersion.CRUSER,
+					"CRTIME": rightVersion.CRTIME,
+					"VERSIONNUM": rightVersion.VERSIONNUM,
 					fragment: leftContent.substring(leftPos)
 				});
 			}
@@ -249,9 +242,9 @@
 					ep1: leftPos,
 					sp2: modifyRightPos,
 					ep2: rightPos,
-					"CRUSER": this.rightVersion.CRUSER,
-					"CRTIME": this.rightVersion.CRTIME,
-					"VERSIONNUM": this.rightVersion.VERSIONNUM,
+					"CRUSER": rightVersion.CRUSER,
+					"CRTIME": rightVersion.CRTIME,
+					"VERSIONNUM": rightVersion.VERSIONNUM,
 					fragment: rightContent.substring(modifyRightPos, rightPos)
 				});
 				modifyRightPos = -1;
@@ -264,9 +257,9 @@
 					ep1: len1,
 					sp2: rightPos,
 					ep2: len2,
-					"CRUSER": this.rightVersion.CRUSER,
-					"CRTIME": this.rightVersion.CRTIME,
-					"VERSIONNUM": this.rightVersion.VERSIONNUM,
+					"CRUSER": rightVersion.CRUSER,
+					"CRTIME": rightVersion.CRTIME,
+					"VERSIONNUM": rightVersion.VERSIONNUM,
 					fragment: rightContent.substring(rightPos)
 				});
 			}
@@ -328,7 +321,7 @@
 			//兼容更短内容的版本比较，如：对标题进行比较，标题一般10-20个字
 			//故每次比较的最小长度为当前长度的一个比例与设定的最小长度中更小值
 			var minMatchLength = Math.floor((leftContent.length - leftPos) * this.minMatchPercent);
-			minMatchLength = Math.min(minMatchLength, this.minMatchLength, 1);
+			minMatchLength = Math.max(Math.min(minMatchLength, this.minMatchLength), 1);
 
 			var rightPoss = rightIndexItem.index;
 			for (var i = 0, length = rightPoss.length; i < length; i++) {
