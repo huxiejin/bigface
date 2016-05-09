@@ -129,8 +129,10 @@
 						type: '-',
 						sp1: leftPos,
 						ep1: range.sp1,
-						sp2: rightPos,
-						ep2: rightPos,
+						//sp2: rightPos,
+						//ep2: rightPos,
+						sp2: modifyRightPos != -1 ? modifyRightPos : rightPos,
+						ep2: modifyRightPos != -1 ? modifyRightPos : rightPos,
 						"CRUSER": rightVersion.CRUSER,
 						"CRTIME": rightVersion.CRTIME,
 						"VERSIONNUM": rightVersion.VERSIONNUM,
@@ -141,8 +143,10 @@
 				if (modifyRightPos != -1) { //修改模式中的新增
 					ranges.push({
 						type: '+',
-						sp1: leftPos,
-						ep1: leftPos,
+						//sp1: leftPos,
+						//ep1: leftPos,
+						sp1: range.sp1,
+						ep1: range.sp1,
 						sp2: modifyRightPos,
 						ep2: rightPos,
 						"CRUSER": rightVersion.CRUSER,
@@ -412,6 +416,7 @@
 			var compareRange = compareResult.ranges[compareIndex];
 
 			//find mergeIndex
+			//存在修改模式的情况，而此时比较的索引位不变。
 			var mergeIndex = this.mergeIndex || 0;
 
 			for (; mergeIndex < mergeResult.length; mergeIndex++) {
