@@ -44,7 +44,7 @@
 			}
 
 			return mergeResult;
-		},
+		},		
 
 		/**
 		 * 比较左右两个版本，返回比较结果{left:{},right:{}, ranges:[]},
@@ -141,6 +141,21 @@
 				}
 
 				if (modifyRightPos != -1) { //修改模式中的新增
+					//修复相同的内容先删除后增加
+					var fragment = rightContent.substring(modifyRightPos, rightPos);
+					var pre = ranges[ranges.length - 1];
+					var sameIndex = -1;
+					if (pre && pre.type == '-' && pre.fragement == fragment) {
+						bsameIndex = ranges.length - 1;
+					}
+					if (sameIndex == -1) {
+						pre = ranges[ranges.length - 2];
+						if (pre && pre.type == '-' && pre.fragement == fragment) {
+							sameIndex = ranges.length - 2;
+						}
+					}
+
+
 					ranges.push({
 						type: '+',
 						//sp1: leftPos,
@@ -152,7 +167,7 @@
 						"CRUSER": rightVersion.CRUSER,
 						"CRTIME": rightVersion.CRTIME,
 						"VERSIONNUM": rightVersion.VERSIONNUM,
-						fragment: rightContent.substring(modifyRightPos, rightPos)
+						fragment: fragment
 					});
 					modifyRightPos = -1;
 				}
@@ -292,7 +307,7 @@
 			}
 
 			//从右侧取一个字符，去左边的内容中进行查找，参数调换位置，这样可以调用同一个接口
-			var range = this.findAvailableRange(rightContent, rightPos, leftContent, leftPos, this.leftIndex);
+			range = this.findAvailableRange(rightContent, rightPos, leftContent, leftPos, this.leftIndex);
 			if (range) {
 				return {
 					sp1: range.sp2,
@@ -301,6 +316,13 @@
 					ep2: range.ep1
 				}
 			}
+
+			range = this.findEqualRange(leftContent, leftPos, rightContent, rightPos);
+
+			if(range.sp1 != range.ep1){//相等但长度没有得到指标
+				return range;
+			}
+
 			return null;
 		},
 
