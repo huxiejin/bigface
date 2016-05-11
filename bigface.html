@@ -226,12 +226,13 @@
 	for(var i = 0; i < result.length; i++){
 		var range = result[i];
 		var opertype = range.type=='+'?'add':(range.type=='-'?'sub':'');
-		var title = "操作人："+range.CRUSER+"&#13;操作时间:"+range.CRTIME+"&#13;操作版本:"+range.VERSIONNUM;
+		var operVersion = range.type == '-' ? range.lv : range.VERSIONNUM;
+		var title = "操作人："+range.CRUSER+"&#13;操作时间:"+range.CRTIME+"&#13;操作版本:"+operVersion;
 		html.push('<span',
 			' operuser="' + range.CRUSER + '"',
 			' opertime="' + range.CRTIME + '"',
 			' opertype="' + opertype + '"',
-			' class="v' + range.VERSIONNUM + '"',
+			' class="v' + operVersion + '"',
 			' lv="v' + range.lv + '"',
 			' title="' + (opertype != '' ? title : '') + '"',
 		 '>',
